@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Exceptions\Container\ContainerException;
 use App\Exceptions\RouteNotFoundException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Router
 {
     private array $routes = [];
+
+    public function __construct(private Container $container)
+    {
+    }
 
     public function register(string $requestMethod, string $route, callable|array $action): self
     {
@@ -32,6 +39,13 @@ class Router
         return $this->routes;
     }
 
+    /**
+     * @throws RouteNotFoundException
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerException
+     * @throws \ReflectionException
+     * @throws ContainerExceptionInterface
+     */
     public function resolve(string $requestUri, string $requestMethod)
     {
         $route = explode('?', $requestUri)[0];
@@ -48,7 +62,7 @@ class Router
         [$class, $method] = $action;
 
         if (class_exists($class)) {
-            $class = new $class();
+            $class = $this->container->get($class);
 
             if (method_exists($class, $method)) {
                 return call_user_func_array([$class, $method], []);
