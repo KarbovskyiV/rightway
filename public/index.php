@@ -20,7 +20,6 @@ $router = new Router($container);
 
 $router->registerRoutesFromControllerAttributes([
     HomeController::class,
-    GeneratorExampleController::class,
     InvoiceController::class,
     UserController::class,
 ]);
