@@ -11,12 +11,16 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[Entity]
 #[Table('invoices')]
+#[HasLifecycleCallbacks]
 class Invoice
 {
     #[Id]
@@ -32,7 +36,7 @@ class Invoice
     #[Column]
     private InvoiceStatus $status;
 
-    #[Column(name: 'created_at',)]
+    #[Column(name: 'created_at')]
     private \DateTime $createdAt;
 
     #[OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'invoice', cascade: ['persist', 'remove'])]
@@ -41,6 +45,12 @@ class Invoice
     public function __construct()
     {
         $this->items = new ArrayCollection();
+    }
+
+    #[PrePersist]
+    public function onPrePersist(LifecycleEventArgs $args)
+    {
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): int
@@ -84,12 +94,6 @@ class Invoice
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTime $createdAt): Invoice
-    {
-        $this->createdAt = $createdAt;
-        return $this;
     }
 
     public function getItems(): Collection
