@@ -11,4 +11,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN docker-php-ext-install pdo pdo_mysql
 
+# TODO: in container I have no name! but create file by OK username permission
+USER 1000:1000
+
 WORKDIR /var/www
