@@ -7,6 +7,7 @@ namespace App;
 use App\Attributes\Route;
 use App\Exceptions\Container\ContainerException;
 use App\Exceptions\RouteNotFoundException;
+use Illuminate\Container\Container;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
