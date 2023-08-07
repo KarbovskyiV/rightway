@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Emaliable;
+namespace App\Services\Emailable;
 
 use App\Contracts\EmailValidationInterface;
 use GuzzleHttp\Client;
