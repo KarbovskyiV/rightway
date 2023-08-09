@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace App;
 
 use App\Attributes\Route;
-use App\Exceptions\Container\ContainerException;
 use App\Exceptions\RouteNotFoundException;
 use Illuminate\Container\Container;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class Router
 {
@@ -20,9 +16,6 @@ class Router
     {
     }
 
-    /**
-     * @throws ReflectionException
-     */
     public function registerRoutesFromControllerAttributes(array $controllers): void
     {
         foreach ($controllers as $controller) {
@@ -34,7 +27,7 @@ class Router
                 foreach ($attributes as $attribute) {
                     $route = $attribute->newInstance();
 
-                    $this->register($route->method->value, $route->routePath, [$controller, $method->getName()]);
+                    $this->register($route->method, $route->routePath, [$controller, $method->getName()]);
                 }
             }
         }
@@ -62,13 +55,6 @@ class Router
         return $this->routes;
     }
 
-    /**
-     * @throws RouteNotFoundException
-     * @throws NotFoundExceptionInterface
-     * @throws ContainerException
-     * @throws ReflectionException
-     * @throws ContainerExceptionInterface
-     */
     public function resolve(string $requestUri, string $requestMethod)
     {
         $route = explode('?', $requestUri)[0];

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Unit;
+namespace Unit;
 
 use App\Exceptions\RouteNotFoundException;
 use App\Router;
